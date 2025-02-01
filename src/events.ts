@@ -1,23 +1,17 @@
-import { Terminal } from "wglt";
+import { Color, Colors, Terminal } from "wglt";
 import { Creature } from "./entities";
 
-type EventKind =
-  | { kind: "pause"; seconds: number }
-  | { kind: "text"; text: string };
-
-export class Event {
-  constructor(public kind: EventKind) {}
-
-  draw(term: Terminal, y: number) {
-    if (this.kind.kind == "text") {
-      term.drawString(0, y, this.kind.text);
-    }
+export abstract class Event {
+  pause(): number | undefined {
+    return undefined;
+  }
+  draw(term: Terminal, y: number): number {
+    return 0;
   }
 
-  static text(text: string) {
+  static text(text: string, fg: Color = Colors.WHITE): Event {
     text = text[0].toUpperCase() + text.slice(1);
-    const kind: EventKind = { kind: "text", text };
-    return new Event(kind);
+    return new TextEvent(text, fg);
   }
 
   static begin(p1: Creature, p2: Creature): Event {
@@ -29,8 +23,8 @@ export class Event {
     function statusStr(creature: Creature) {
       return `${creature.name}: ${creature.hp}/${creature.maxHp()} HP`;
     }
-    const text = `${statusStr(p2)} ${statusStr(p1)}`;
-    return this.text(text);
+    const text = `(${statusStr(p2)} ${statusStr(p1)})`;
+    return this.text(text, Colors.LIGHT_GRAY);
   }
 
   static death(defender: Creature) {
@@ -49,8 +43,7 @@ export class Event {
   }
 
   static pause(seconds: number) {
-    const kind: EventKind = { kind: "pause", seconds };
-    return new Event(kind);
+    return new PauseEvent(seconds);
   }
 
   static stumble(
@@ -75,6 +68,30 @@ export class Event {
   static miss(phrase: string, _attacker: Creature, _defender: Creature) {
     const text = phrase;
     return this.text(text);
+  }
+}
+
+class PauseEvent extends Event {
+  constructor(public seconds: number) {
+    super();
+  }
+
+  pause(): number | undefined {
+    return this.seconds;
+  }
+}
+
+class TextEvent extends Event {
+  constructor(
+    public text: string,
+    public fg: Color = Colors.WHITE,
+  ) {
+    super();
+  }
+
+  draw(term: Terminal, y: number): number {
+    term.drawString(0, y, this.text, this.fg);
+    return 1;
   }
 }
 

@@ -110,12 +110,26 @@ window.addEventListener("DOMContentLoaded", () => {
 
   events.emit(Event.conclusion(count, orc, boromir));
 
+  let secondsPassed = 0;
+  const timer = setInterval(() => {
+    secondsPassed++;
+  }, 1000);
+
   let event = 0;
+  let waitUntil = 0;
+
   term.update = () => {
+    if (secondsPassed >= waitUntil) {
+      const pause = events.events[event].pause();
+      if (pause) {
+        waitUntil = secondsPassed + pause;
+      }
+      event++;
+    }
+
     term.clear();
     for (let i = 0; i < event; i++) {
       events.events[i].draw(term, i);
     }
-    event++;
   };
 });
