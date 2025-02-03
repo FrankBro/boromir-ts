@@ -113,7 +113,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let secondsPassed = 0;
   setInterval(() => {
     secondsPassed++;
-  }, 100);
+  }, 1000);
 
   let event = 0;
   let drawableEvents: number[] = [];
