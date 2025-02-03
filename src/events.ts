@@ -9,8 +9,13 @@ export abstract class Event {
     return 0;
   }
 
-  static text(text: string, fg: Color = Colors.WHITE): Event {
-    text = text[0].toUpperCase() + text.slice(1);
+  static text(
+    text: string,
+    nSpaces: number = 0,
+    fg: Color = Colors.WHITE,
+  ): Event {
+    const spaces = " ".repeat(nSpaces);
+    text = `${spaces}${text[0].toUpperCase()}${text.slice(1)}`;
     return new TextEvent(text, fg);
   }
 
@@ -24,7 +29,7 @@ export abstract class Event {
       return `${creature.name}: ${creature.hp}/${creature.maxHp()} HP`;
     }
     const text = `(${statusStr(p2)} ${statusStr(p1)})`;
-    return this.text(text, Colors.LIGHT_GRAY);
+    return this.text(text, 0, Colors.LIGHT_GRAY);
   }
 
   static death(defender: Creature) {
@@ -52,7 +57,7 @@ export abstract class Event {
     _defender: Creature,
   ) {
     const text = stumbleDesc;
-    return this.text(text);
+    return this.text(text, 2);
   }
 
   static hit(
@@ -62,12 +67,12 @@ export abstract class Event {
     _damage: number,
   ) {
     const text = phrase;
-    return this.text(text);
+    return this.text(text, 2);
   }
 
   static miss(phrase: string, _attacker: Creature, _defender: Creature) {
     const text = phrase;
-    return this.text(text);
+    return this.text(text, 2);
   }
 }
 

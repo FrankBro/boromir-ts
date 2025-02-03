@@ -113,9 +113,10 @@ window.addEventListener("DOMContentLoaded", () => {
   let secondsPassed = 0;
   const timer = setInterval(() => {
     secondsPassed++;
-  }, 1000);
+  }, 100);
 
   let event = 0;
+  let drawableEvents: number[] = [];
   let waitUntil = 0;
 
   term.update = () => {
@@ -123,13 +124,17 @@ window.addEventListener("DOMContentLoaded", () => {
       const pause = events.events[event].pause();
       if (pause) {
         waitUntil = secondsPassed + pause;
+      } else {
+        console.log(event);
+        drawableEvents.push(event);
       }
       event++;
     }
 
     term.clear();
-    for (let i = 0; i < event; i++) {
-      events.events[i].draw(term, i);
+    let y = 0;
+    for (let i of drawableEvents.slice(-height)) {
+      y += events.events[i].draw(term, y);
     }
   };
 });
