@@ -111,7 +111,7 @@ window.addEventListener("DOMContentLoaded", () => {
   events.emit(Event.conclusion(count, orc, boromir));
 
   let secondsPassed = 0;
-  const timer = setInterval(() => {
+  setInterval(() => {
     secondsPassed++;
   }, 100);
 
@@ -125,7 +125,6 @@ window.addEventListener("DOMContentLoaded", () => {
       if (pause) {
         waitUntil = secondsPassed + pause;
       } else {
-        console.log(event);
         drawableEvents.push(event);
       }
       event++;

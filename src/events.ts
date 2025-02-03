@@ -5,7 +5,7 @@ export abstract class Event {
   pause(): number | undefined {
     return undefined;
   }
-  draw(term: Terminal, y: number): number {
+  draw(_term: Terminal, _y: number): number {
     return 0;
   }
 
